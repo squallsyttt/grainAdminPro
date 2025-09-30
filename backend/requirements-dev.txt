@@ -1,0 +1,24 @@
+# ========================================
+# grainAdminPro Development Dependencies
+# ========================================
+
+# 包含所有生产依赖
+-r requirements.txt
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.23.3
+pytest-cov==4.1.0
+httpx==0.26.0  # FastAPI 测试客户端
+faker==22.0.0  # 测试数据生成
+schemathesis==3.27.1  # 契约测试
+
+# Code Quality
+black==24.1.1  # 代码格式化
+isort==5.13.2  # Import 排序
+flake8==7.0.0  # 代码检查
+mypy==1.8.0  # 类型检查
+
+# Development Tools
+ipython==8.20.0  # 交互式 Shell
+pre-commit==3.6.0  # Git hooks

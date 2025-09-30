@@ -1,0 +1,105 @@
+[Unit]
+Description=GrainAdmin Celery Worker Service
+Documentation=https://github.com/yourorg/grainadmin
+After=network.target redis.service postgresql.service
+Wants=redis.service postgresql.service
+
+[Service]
+Type=forking
+User=grainadmin
+Group=grainadmin
+WorkingDirectory=/opt/grainadmin/backend
+
+# 环境变量
+Environment="PATH=/opt/grainadmin/backend/venv/bin"
+Environment="PYTHONUNBUFFERED=1"
+EnvironmentFile=/opt/grainadmin/backend/.env.production
+
+# 启动命令
+ExecStart=/opt/grainadmin/backend/venv/bin/celery -A src.core.celery_app worker \
+    --loglevel=info \
+    --concurrency=4 \
+    --max-tasks-per-child=1000 \
+    --pidfile=/var/run/celery/grainadmin-worker.pid \
+    --logfile=/var/log/celery/grainadmin-worker.log \
+    --detach
+
+# 停止命令
+ExecStop=/bin/kill -s TERM $MAINPID
+
+# 服务管理
+Restart=always
+RestartSec=10
+KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=300
+
+# 资源限制
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# 安全设置
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/grainadmin/backend/logs /var/data/grainadmin/uploads /var/run/celery /var/log/celery
+
+# 日志配置
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=grainadmin-celery
+
+[Install]
+WantedBy=multi-user.target
+
+# =====================================
+# 配置说明
+# =====================================
+#
+# 安装步骤：
+# 1. 创建必要的目录：
+#    sudo mkdir -p /var/run/celery
+#    sudo mkdir -p /var/log/celery
+#    sudo chown -R grainadmin:grainadmin /var/run/celery
+#    sudo chown -R grainadmin:grainadmin /var/log/celery
+#
+# 2. 复制 systemd 服务文件：
+#    sudo cp deployment/grainadmin-celery.service /etc/systemd/system/
+#
+# 3. 重载 systemd 配置：
+#    sudo systemctl daemon-reload
+#
+# 4. 启用并启动服务：
+#    sudo systemctl enable grainadmin-celery
+#    sudo systemctl start grainadmin-celery
+#
+# 5. 检查状态：
+#    sudo systemctl status grainadmin-celery
+#
+# 管理命令：
+# - 启动服务：sudo systemctl start grainadmin-celery
+# - 停止服务：sudo systemctl stop grainadmin-celery
+# - 重启服务：sudo systemctl restart grainadmin-celery
+# - 查看状态：sudo systemctl status grainadmin-celery
+# - 查看日志：sudo journalctl -u grainadmin-celery -f
+# - 查看 Celery 日志：sudo tail -f /var/log/celery/grainadmin-worker.log
+#
+# 监控和管理：
+# - Flower（Celery 监控工具）：
+#   /opt/grainadmin/backend/venv/bin/celery -A src.core.celery_app flower --port=5555
+#
+# - 查看活跃任务：
+#   /opt/grainadmin/backend/venv/bin/celery -A src.core.celery_app inspect active
+#
+# - 查看注册的任务：
+#   /opt/grainadmin/backend/venv/bin/celery -A src.core.celery_app inspect registered
+#
+# 生产环境配置建议：
+# - concurrency：建议设置为 CPU 核心数
+# - max-tasks-per-child：防止内存泄漏，定期重启 worker
+# - 配置 Celery Beat（定时任务调度器）如果需要
+# - 配置任务路由到不同的队列
+# - 配置任务优先级
+# - 监控队列长度和任务执行时间
+#

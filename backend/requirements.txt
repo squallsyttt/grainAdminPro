@@ -1,0 +1,36 @@
+# ========================================
+# grainAdminPro Backend Dependencies
+# ========================================
+# Python 3.11+
+
+# Web Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6  # 文件上传支持
+
+# Database
+sqlalchemy==2.0.25
+alembic==1.13.1
+psycopg2-binary==2.9.9  # PostgreSQL 驱动
+asyncpg==0.29.0  # 异步 PostgreSQL 支持
+
+# Caching & Queue
+redis==5.0.1
+celery==5.3.6
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0  # JWT Token
+passlib[bcrypt]==1.7.4  # 密码哈希
+python-dotenv==1.0.0  # 环境变量管理
+
+# Validation & Serialization
+pydantic==2.5.3
+pydantic-settings==2.1.0
+email-validator==2.1.0
+
+# Utilities
+python-dateutil==2.8.2
+pytz==2023.3
+
+# Logging
+structlog==24.1.0  # 结构化日志

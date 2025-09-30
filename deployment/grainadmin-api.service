@@ -1,0 +1,111 @@
+[Unit]
+Description=GrainAdmin API Service (FastAPI/Uvicorn)
+Documentation=https://github.com/yourorg/grainadmin
+After=network.target postgresql.service redis.service
+Wants=postgresql.service redis.service
+
+[Service]
+Type=notify
+User=grainadmin
+Group=grainadmin
+WorkingDirectory=/opt/grainadmin/backend
+
+# 环境变量
+Environment="PATH=/opt/grainadmin/backend/venv/bin"
+Environment="PYTHONUNBUFFERED=1"
+EnvironmentFile=/opt/grainadmin/backend/.env.production
+
+# 启动命令
+ExecStart=/opt/grainadmin/backend/venv/bin/uvicorn src.main:app \
+    --host 0.0.0.0 \
+    --port 8000 \
+    --workers 4 \
+    --log-level info \
+    --access-log \
+    --proxy-headers \
+    --forwarded-allow-ips='*'
+
+# 服务管理
+Restart=always
+RestartSec=10
+KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=30
+
+# 资源限制
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# 安全设置
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/grainadmin/backend/logs /var/data/grainadmin/uploads
+
+# 日志配置
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=grainadmin-api
+
+[Install]
+WantedBy=multi-user.target
+
+# =====================================
+# 配置说明
+# =====================================
+#
+# 安装步骤：
+# 1. 创建服务用户：
+#    sudo useradd -r -s /bin/false grainadmin
+#
+# 2. 创建必要的目录：
+#    sudo mkdir -p /opt/grainadmin/backend
+#    sudo mkdir -p /var/data/grainadmin/uploads
+#    sudo mkdir -p /opt/grainadmin/backend/logs
+#
+# 3. 设置权限：
+#    sudo chown -R grainadmin:grainadmin /opt/grainadmin
+#    sudo chown -R grainadmin:grainadmin /var/data/grainadmin
+#
+# 4. 部署应用代码：
+#    sudo -u grainadmin cp -r backend/* /opt/grainadmin/backend/
+#    sudo -u grainadmin python3 -m venv /opt/grainadmin/backend/venv
+#    sudo -u grainadmin /opt/grainadmin/backend/venv/bin/pip install -r /opt/grainadmin/backend/requirements.txt
+#
+# 5. 配置环境变量：
+#    sudo cp backend/.env.example /opt/grainadmin/backend/.env.production
+#    sudo vim /opt/grainadmin/backend/.env.production  # 修改生产环境配置
+#    sudo chown grainadmin:grainadmin /opt/grainadmin/backend/.env.production
+#    sudo chmod 600 /opt/grainadmin/backend/.env.production
+#
+# 6. 应用数据库迁移：
+#    sudo -u grainadmin /opt/grainadmin/backend/venv/bin/alembic upgrade head
+#
+# 7. 复制 systemd 服务文件：
+#    sudo cp deployment/grainadmin-api.service /etc/systemd/system/
+#
+# 8. 重载 systemd 配置：
+#    sudo systemctl daemon-reload
+#
+# 9. 启用并启动服务：
+#    sudo systemctl enable grainadmin-api
+#    sudo systemctl start grainadmin-api
+#
+# 10. 检查状态：
+#     sudo systemctl status grainadmin-api
+#
+# 管理命令：
+# - 启动服务：sudo systemctl start grainadmin-api
+# - 停止服务：sudo systemctl stop grainadmin-api
+# - 重启服务：sudo systemctl restart grainadmin-api
+# - 查看状态：sudo systemctl status grainadmin-api
+# - 查看日志：sudo journalctl -u grainadmin-api -f
+# - 重载配置：sudo systemctl reload grainadmin-api
+#
+# 生产环境配置建议：
+# - workers 数量：建议设置为 CPU 核心数 * 2 + 1
+# - 日志轮转：配置 logrotate 定期清理日志
+# - 监控：配置 Prometheus + Grafana 监控服务健康状态
+# - 告警：配置 alertmanager 在服务异常时发送告警
+#

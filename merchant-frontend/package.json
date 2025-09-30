@@ -1,0 +1,40 @@
+{
+  "name": "grainadmin-merchant-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "grainAdminPro 商家前端 - 商家入驻申请与管理系统",
+  "scripts": {
+    "start": "umi dev",
+    "build": "umi build",
+    "test": "umi test",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
+    "lint:fix": "eslint --fix --ext .js,.jsx,.ts,.tsx src",
+    "prettier": "prettier --check src/**/*.{js,jsx,ts,tsx,json,css,less}",
+    "prettier:fix": "prettier --write src/**/*.{js,jsx,ts,tsx,json,css,less}"
+  },
+  "dependencies": {
+    "@ant-design/pro-components": "^2.6.43",
+    "@ant-design/pro-layout": "^7.17.13",
+    "@umijs/max": "^4.3.24",
+    "antd": "^5.12.8",
+    "axios": "^1.6.5",
+    "dayjs": "^1.11.10",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.202",
+    "@types/react": "^18.2.47",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "@typescript-eslint/parser": "^6.18.1",
+    "@umijs/lint": "^4.1.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
