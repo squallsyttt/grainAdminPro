@@ -1,3 +1,13 @@
 /backend/venv/
 /admin-frontend/node_modules/
 /merchant-frontend/node_modules/
+
+# 子项目独立管理git
+/backend/.git/
+/admin-frontend/.git/
+/merchant-frontend/.git/
+
+
+# 前端的umi文件
+/admin-frontend/src/.umi/
+/merchant-frontend/src/.umi/

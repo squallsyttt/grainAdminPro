@@ -1,32 +1,18 @@
 import { defineConfig } from '@umijs/max';
 
 export default defineConfig({
-  antd: {
-    // Ant Design 配置
-    configProvider: {},
-  },
-  request: {
-    // 请求配置
-    dataField: 'data',
-  },
-  locale: {
-    // 国际化配置
-    default: 'zh-CN',
-    baseSeparator: '-',
-  },
-  model: {},
-  initialState: {},
+  // 代理配置
   proxy: {
-    // 开发代理配置
     '/api': {
       target: 'http://localhost:8000',
       changeOrigin: true,
     },
   },
+  // 路由配置
   routes: [
     {
       path: '/',
-      redirect: '/apply',
+      redirect: '/application/status',
     },
     {
       path: '/login',
@@ -34,23 +20,36 @@ export default defineConfig({
       layout: false,
     },
     {
-      path: '/apply',
+      path: '/application',
       name: '入驻申请',
       icon: 'FormOutlined',
-      component: './Apply',
-    },
-    {
-      path: '/info',
-      name: '店铺信息',
-      icon: 'ShopOutlined',
-      component: './Info',
+      routes: [
+        {
+          path: '/application/create',
+          name: '提交申请',
+          component: './Application/Create',
+        },
+        {
+          path: '/application/status',
+          name: '申请状态',
+          component: './Application/Status',
+        },
+      ],
     },
     {
       path: '/contracts',
       name: '合同管理',
       icon: 'FileTextOutlined',
-      component: './Contracts',
+      routes: [
+        {
+          path: '/contracts/upload',
+          name: '上传合同',
+          component: './Contracts/Upload',
+        },
+      ],
     },
   ],
   npmClient: 'npm',
+  // 标题
+  title: 'grainAdmin 商家后台',
 });

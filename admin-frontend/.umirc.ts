@@ -1,28 +1,16 @@
 import { defineConfig } from '@umijs/max';
 
 export default defineConfig({
-  antd: {
-    // Ant Design 配置
-    configProvider: {},
-  },
-  request: {
-    // 请求配置
-    dataField: 'data',
-  },
-  locale: {
-    // 国际化配置
-    default: 'zh-CN',
-    baseSeparator: '-',
-  },
-  model: {},
-  initialState: {},
+  // 禁用 MFSU 以解决模块加载错误
+  mfsu: false,
+  // 代理配置
   proxy: {
-    // 开发代理配置
     '/api': {
       target: 'http://localhost:8000',
       changeOrigin: true,
     },
   },
+  // 路由配置
   routes: [
     {
       path: '/',
@@ -56,6 +44,19 @@ export default defineConfig({
       ],
     },
     {
+      path: '/audits',
+      name: '审核管理',
+      icon: 'AuditOutlined',
+      routes: [
+        {
+          path: '/audits/history/:id',
+          name: '审核历史',
+          hideInMenu: true,
+          component: './Audits/History',
+        },
+      ],
+    },
+    {
       path: '/merchants',
       name: '商家管理',
       icon: 'TeamOutlined',
@@ -63,4 +64,6 @@ export default defineConfig({
     },
   ],
   npmClient: 'npm',
+  // 标题
+  title: 'grainAdmin 主后台',
 });

@@ -4,6 +4,7 @@
   "private": true,
   "description": "grainAdminPro 商家前端 - 商家入驻申请与管理系统",
   "scripts": {
+    "dev": "umi dev",
     "start": "umi dev",
     "build": "umi build",
     "test": "umi test",

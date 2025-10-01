@@ -4,6 +4,7 @@
   "private": true,
   "description": "grainAdminPro 管理员前端 - 商家入驻审核管理系统",
   "scripts": {
+    "dev": "umi dev",
     "start": "umi dev",
     "build": "umi build",
     "test": "umi test",
@@ -24,6 +25,9 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
+    "@types/jest": "^30.0.0",
     "@types/lodash": "^4.14.202",
     "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.18",
@@ -31,6 +35,8 @@
     "@typescript-eslint/parser": "^6.18.1",
     "@umijs/lint": "^4.1.0",
     "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "prettier": "^3.1.1",
     "typescript": "^5.3.3"
   },
